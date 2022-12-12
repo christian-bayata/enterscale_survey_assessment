@@ -1,14 +1,14 @@
-require("express-async-errors");
-require("dotenv").config();
+//require("express-async-errors");
+// require("dotenv").config();
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const morgan = require("morgan");
 const winston = require("./logger/winston-setup");
-const error = require("./middlewares/error");
+//const error = require("./middlewares/error");
 const swaggerDocument = require("./swagger.json");
 const cors = require("cors");
-const Response = require("./utils/response");
-const router = require("./api/v1/routes/index");
+//const Response = require("./utils/response");
+//const router = require("./api/v1/routes/index");
 const sequelize = require("./config/database");
 
 /* Initialize express application */
@@ -34,9 +34,9 @@ sequelize
 // });
 
 /* Bind app port to index router */
-app.use("/api", router);
+//app.use("/api", router);
 
 /* Use the error handling middleware as the last in the middleware stack */
-app.use(error);
+//app.use(error);
 
 module.exports = app;
