@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const sendEmail = require("../../../utils/send_email");
 const status = require("../../../status-codes");
 const _ = require("lodash");
+const helper = require("../../../utils/helper");
 
 /**
  * @Title Company verification code
@@ -33,7 +34,7 @@ const verificationCode = async (req, res) => {
 
     return Response.sendSuccess({ res, statusCode: status.CREATED, message: "Code successfully sent", body: userToken });
   } catch (error) {
-    // console.log("********************: ", error);
+    console.log("********************: ", error);
     return Response.sendFatalError({ res });
   }
 };
@@ -69,11 +70,44 @@ const signUp = async (req, res) => {
     const createCompany = await userRepository.createUser(companyData);
     const theCompany = _.pick(createCompany, ["_id", "name", "address", "email", "state", "city"]);
 
+    await tokenRepository.deleteVerToken({ email: data.email, token: data.verCode });
+
     return Response.sendSuccess({ res, statusCode: status.CREATED, message: "Company successfully signed up", body: theCompany });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return Response.sendFatalError({ res });
   }
 };
 
-module.exports = { verificationCode, signUp };
+/**
+ * @Responsibility:  Logs in an already signed up company
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+const login = async (req, res) => {
+  const { data } = res;
+
+  try {
+    const userExists = await userRepository.findUser(data.email);
+    if (!userExists) return Response.sendError({ res, statusCode: status.NOT_FOUND, message: "Sorry you do not have an account with us. Please sign up" });
+
+    /* validate user password with bcrypt */
+    const validPassword = await userExists.comparePassword(data.password);
+    if (!validPassword) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Incorrect Password! Unauthorized" });
+
+    /* Generate JWT token for user */
+    const token = userExists.generateJsonWebToken();
+
+    /* Format and hash user data for security */
+    const protectedData = helper.formatUserData(data);
+
+    return Response.sendSuccess({ res, statusCode: status.OK, message: "User successfully logged in", body: { token, userData: protectedData } });
+  } catch (error) {
+    // console.log(error);
+    return Response.sendFatalError({ res });
+  }
+};
+
+module.exports = { verificationCode, signUp, login };

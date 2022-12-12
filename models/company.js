@@ -1,8 +1,8 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const slug = require("mongoose-slug-generator");
-// const jwt = require("jsonwebtoken");
-// const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 // const mongoosastic = require("mongoosastic");
 
 const Schema = mongoose.Schema;
@@ -35,15 +35,38 @@ const CompanySchema = new Schema(
       required: true,
       minlength: 6,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
     slug: { type: String, slug: "name" },
   },
   { timestamps: true }
 );
 mongoose.plugin(slug);
+
+/* Generate JSON web token for company */
+CompanySchema.methods.generateJsonWebToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+    },
+    process.env.JWT_SECRET_KEY
+  );
+};
+
+/* Hash the password before storing it in the database */
+CompanySchema.pre("save", async function save(next) {
+  try {
+    if (!this.isModified("password")) return next();
+
+    this.password = await bcrypt.hash(this.password, 10);
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/* Compare password using bcrypt.compare */
+CompanySchema.methods.comparePassword = async function (userPassword) {
+  return await bcrypt.compare(userPassword, this.password);
+};
 
 /* Creates the user model */
 const Company = mongoose.model("Company", CompanySchema);
