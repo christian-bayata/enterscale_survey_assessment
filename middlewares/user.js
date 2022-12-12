@@ -78,7 +78,42 @@ const loginValidation = async (req, res, next) => {
   }
 };
 
+/**
+ * @Responsibility:  Middleware authentication for company
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
+ */
+
+const authenticateUser = async (req, res, next) => {
+  let { authorization } = req.headers;
+  const { userId } = req.body;
+
+  if (!authorization) {
+    authorization = req.body.authorization;
+  }
+
+  /* decode jwt token from req header */
+  const decode = jwt.verify(authorization, process.env.JWT_SECRET_KEY, (err, decoded) => decoded);
+
+  /* if token is invalid or has expired */
+  if (!authorization || !decode || !decode._id) {
+    return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "Unauthenticated! Please login" });
+  }
+
+  try {
+    res.user = decode;
+    return next();
+  } catch (error) {
+    console.log(error);
+    return Response.sendFatalError({ res });
+  }
+};
+
 module.exports = {
   signupValidation,
   loginValidation,
+  authenticateUser,
 };
