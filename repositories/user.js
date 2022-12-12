@@ -1,14 +1,14 @@
-const models = require("../models/index");
+const Company = require("../models/company");
+const Token = require("../models/token");
 
 /**
  *
- * @param where
+ * @param email
  * @returns {Promise<*>}
  */
 
-const findUser = async (where) => {
-  //   console.log("where: ", where);
-  //   return await Company.findOne({ where });
+const findUser = async (email) => {
+  return await Company.findOne({ email });
 };
 
 /**
@@ -18,7 +18,7 @@ const findUser = async (where) => {
  */
 
 const createVerToken = async (data) => {
-  //   return await Token.create(data);
+  return await Token.create(data);
 };
 
 module.exports = { findUser, createVerToken };

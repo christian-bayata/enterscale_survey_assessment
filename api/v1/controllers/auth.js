@@ -3,7 +3,7 @@ const Response = require("../../../utils/response");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 // import { BuildResponse } from "../../../utils/interfaces/utils.interfaces";
-// import sendEmail from "../../../utils/send_email";
+const sendEmail = require("../../../utils/send_email");
 // import indexModel from "../../../models/index.model";
 const status = require("../../../status-codes");
 
@@ -20,11 +20,11 @@ const verificationCode = async (req, res) => {
 
   try {
     /* Check if user with this email already exists */
-    const confirmEmail = await userRepository.findUser({ email });
+    const confirmEmail = await userRepository.findUser(email);
     if (confirmEmail) return Response.sendError({ res, statusCode: status.BAD_REQUEST, error: "You already have an account with us" });
 
     /* Create verification code for user */
-    const verToken = { email, code: crypto.randomBytes(3).toString("hex").toUpperCase() };
+    const verToken = { email, token: crypto.randomBytes(3).toString("hex").toUpperCase() };
     const userToken = await userRepository.createVerToken(verToken);
 
     /* Send verification code to company's email address */
