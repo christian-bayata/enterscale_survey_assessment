@@ -10,8 +10,4 @@ authRouter.post("/signup", userMiddleware.signupValidation, authController.signU
 
 authRouter.post("/login", userMiddleware.loginValidation, authController.login);
 
-// userRouter.patch("/update-user/:id", userMiddleware.authenticateUser, userMiddleware.updateUserValidation, userController.updateUser);
-
-// userRouter.delete("/delete-user/:id", userMiddleware.isAdmin, userController.deleteUser);
-
 module.exports = authRouter;

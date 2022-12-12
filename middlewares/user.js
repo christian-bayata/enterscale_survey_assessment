@@ -3,7 +3,7 @@ const Joi = require("joi");
 const Response = require("../utils/response");
 const userRepository = require("../repositories/user");
 const status = require("../status-codes");
-//const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 /**
  * @Responsibility: Validation middleware for company sign up
@@ -87,7 +87,7 @@ const loginValidation = async (req, res, next) => {
  * @returns {*}
  */
 
-const authenticateUser = async (req, res, next) => {
+const authenticateCompany = async (req, res, next) => {
   let { authorization } = req.headers;
   const { userId } = req.body;
 
@@ -104,10 +104,10 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    res.user = decode;
+    res.company = decode;
     return next();
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return Response.sendFatalError({ res });
   }
 };
@@ -115,5 +115,5 @@ const authenticateUser = async (req, res, next) => {
 module.exports = {
   signupValidation,
   loginValidation,
-  authenticateUser,
+  authenticateCompany,
 };

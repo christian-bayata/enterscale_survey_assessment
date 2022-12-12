@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const slug = require("mongoose-slug-generator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-// const mongoosastic = require("mongoosastic");
 
 const Schema = mongoose.Schema;
 
@@ -68,6 +67,6 @@ CompanySchema.methods.comparePassword = async function (userPassword) {
   return await bcrypt.compare(userPassword, this.password);
 };
 
-/* Creates the user model */
+/* Creates the company model */
 const Company = mongoose.model("Company", CompanySchema);
 module.exports = Company;

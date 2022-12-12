@@ -6,7 +6,7 @@ const TokenSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Company",
     },
     email: {
       type: String,

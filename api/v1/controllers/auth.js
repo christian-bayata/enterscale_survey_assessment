@@ -1,3 +1,4 @@
+require("express-async-errors");
 const userRepository = require("../../../repositories/user");
 const tokenRepository = require("../../../repositories/token");
 const Response = require("../../../utils/response");
@@ -33,7 +34,7 @@ const verificationCode = async (req, res) => {
     const message = `Hello, your verification token is ${userToken.token}.\n\n Thanks and regards`;
     await sendEmail({ email, subject: "Verification Code", message });
 
-    return Response.sendSuccess({ res, statusCode: status.CREATED, message: "Code successfully sent", body: userToken });
+    return Response.sendSuccess({ res, statusCode: status.OK, message: "Code successfully sent", body: userToken });
   } catch (error) {
     // console.log("********************: ", error);
     return Response.sendFatalError({ res });
