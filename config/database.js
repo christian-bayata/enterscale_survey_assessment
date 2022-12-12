@@ -14,8 +14,6 @@ const dbPort = process.env.DB_PORT;
 
 const URI = `${dbDriver}://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`;
 
-console.log("URI: ", URI);
-
 sequelize = new Sequelize(URI, {
   //   host: "mysql2",
   dialect: "mysql",

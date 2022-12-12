@@ -7,7 +7,7 @@ const winston = require("./logger/winston-setup");
 const error = require("./middlewares/error");
 const swaggerDocument = require("./swagger.json");
 const cors = require("cors");
-//const Response = require("./utils/response");
+const Response = require("./utils/response");
 //const router = require("./api/v1/routes/index");
 const sequelize = require("./config/database");
 
@@ -29,9 +29,9 @@ sequelize
   });
 
 /* Ping the API to ensure it is running. */
-// app.get("/health-check", (req, res) => {
-//   return Response.sendSuccess({ res, message: "Health check passed" });
-// });
+app.get("/health-check", (req, res) => {
+  return Response.sendSuccess({ res, message: "Health check passed" });
+});
 
 /* Bind app port to index router */
 //app.use("/api", router);
