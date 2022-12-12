@@ -1,5 +1,4 @@
 const Company = require("../models/company");
-const Token = require("../models/token");
 
 /**
  *
@@ -17,8 +16,8 @@ const findUser = async (email) => {
  * @returns {Promise<*>}
  */
 
-const createVerToken = async (data) => {
-  return await Token.create(data);
+const createUser = async (data) => {
+  return await Company.create(data);
 };
 
-module.exports = { findUser, createVerToken };
+module.exports = { findUser, createUser };
