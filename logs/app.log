@@ -105,3 +105,7 @@
 {"level":"info","message":"::ffff:127.0.0.1 - - [12/Dec/2022:18:41:17 +0000] \"POST /api/auth/signup HTTP/1.1\" 201 211 \"-\" \"Thunder Client (https://www.thunderclient.com)\"\n"}
 {"level":"info","message":"::ffff:127.0.0.1 - - [12/Dec/2022:18:44:55 +0000] \"POST /api/auth/login HTTP/1.1\" 400 56 \"-\" \"Thunder Client (https://www.thunderclient.com)\"\n"}
 {"level":"info","message":"::ffff:127.0.0.1 - - [12/Dec/2022:18:45:00 +0000] \"POST /api/auth/login HTTP/1.1\" 200 382 \"-\" \"Thunder Client (https://www.thunderclient.com)\"\n"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [12/Dec/2022:21:13:44 +0000] \"POST /api/auth/signup HTTP/1.1\" 500 45 \"-\" \"Thunder Client (https://www.thunderclient.com)\"\n"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [12/Dec/2022:21:14:33 +0000] \"POST /api/auth/signup HTTP/1.1\" 409 43 \"-\" \"Thunder Client (https://www.thunderclient.com)\"\n"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [12/Dec/2022:21:15:52 +0000] \"POST /api/auth/signup HTTP/1.1\" 409 43 \"-\" \"Thunder Client (https://www.thunderclient.com)\"\n"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [12/Dec/2022:21:16:42 +0000] \"POST /api/auth/signup HTTP/1.1\" 409 43 \"-\" \"Thunder Client (https://www.thunderclient.com)\"\n"}

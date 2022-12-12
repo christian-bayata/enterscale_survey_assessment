@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const sendEmail = require("../../../utils/send_email");
 const status = require("../../../status-codes");
 const _ = require("lodash");
+const mongoose = require("mongoose");
 const helper = require("../../../utils/helper");
 
 /**
@@ -34,7 +35,7 @@ const verificationCode = async (req, res) => {
 
     return Response.sendSuccess({ res, statusCode: status.CREATED, message: "Code successfully sent", body: userToken });
   } catch (error) {
-    console.log("********************: ", error);
+    // console.log("********************: ", error);
     return Response.sendFatalError({ res });
   }
 };
@@ -49,6 +50,10 @@ const verificationCode = async (req, res) => {
 
 const signUp = async (req, res) => {
   const { data } = res;
+
+  /*  Start mongoose transaction */
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
     /* Check if user already exists */
@@ -67,15 +72,19 @@ const signUp = async (req, res) => {
     }
 
     const companyData = { name: data.name, email: data.email, address: data.address, state: data.state, password: data.password, city: data.city };
-    const createCompany = await userRepository.createUser(companyData);
+    const createCompany = await userRepository.createUser(companyData, { session });
     const theCompany = _.pick(createCompany, ["_id", "name", "address", "email", "state", "city"]);
-
-    await tokenRepository.deleteVerToken({ email: data.email, token: data.verCode });
+    await tokenRepository.deleteVerToken({ email: data.email, token: data.verCode }, { session });
+    /* Commit the changes made */
+    await session.commitTransaction();
 
     return Response.sendSuccess({ res, statusCode: status.CREATED, message: "Company successfully signed up", body: theCompany });
   } catch (error) {
     // console.log(error);
     return Response.sendFatalError({ res });
+  } finally {
+    /* Ending the session */
+    session.endSession();
   }
 };
 
