@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "fund-me",
-    "description": "An API that allows users create accounts, fund their accounts, transfer funds to other's accounts, and withdraw funds from their accounts",
+    "title": "enterscale-survey-api",
+    "description": "A secured survey server that allows a company admin to roll out surveys.",
     "contact": {
       "email": "franksagie1@gmail.com"
     },
@@ -19,5 +19,381 @@
       "in": "header"
     }
   },
-  "paths": {}
+  "paths": {
+    "/auth/verification": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Provides verification code for user signup",
+        "operationId": "verification",
+        "description": "creates a 6-digit token that is required for signup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Verification Token",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/verificationToken"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Creates new company account",
+        "operationId": "signup",
+        "description": "Creates a new company account by receiving as inputs, the name, email, password, address, state, and city",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "New Company Account",
+            "description": "sign up a new company",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/companySignup"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Logs in a user",
+        "operationId": "login",
+        "description": "provides a platform for companies to login by providing their email and password",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Log into company account",
+            "description": "Logs in an already signed-up company ",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/companyLogin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/survey/create-survey": {
+      "post": {
+        "tags": ["Survey"],
+        "summary": "Create a company survey",
+        "operationId": "create-survey",
+        "description": "provides a platform for companies create a survey with multiple questions",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "api_key": ["authorization"]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Create a company survey",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createCompanySurvey"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/survey/get-survey/{slug}": {
+      "get": {
+        "tags": ["Survey"],
+        "summary": "Retrieves a company survey by the slug passed into the url resource",
+        "operationId": "get-survey",
+        "description": "provides a platform for users to retrieve a survey via the survey link provided by the company",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/survey/response": {
+      "post": {
+        "tags": ["Survey"],
+        "summary": "Response(s) to the questions provided in the company survey",
+        "operationId": "response",
+        "description": "provides a platform for users to respons to the multiple questions present in the company survey",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Response to company survey",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/responseToCompanySurvey"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/survey/get-responses": {
+      "get": {
+        "tags": ["Survey"],
+        "summary": "Retrieves all the survey questions and responses the user gives",
+        "operationId": "get-responses",
+        "description": "provides a platform for the company admin to retrieve the responses",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "api_key": ["authorization"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/question/create-question": {
+      "post": {
+        "tags": ["Question"],
+        "summary": "Creates question(s) found in a server",
+        "operationId": "create-question",
+        "description": "provides a platform for the company admin fill the survey with questions",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "security": [
+          {
+            "api_key": ["authorization"]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Create question(s) for company survey",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createQuestions"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "verificationToken": {
+      "type": "object",
+      "required": ["user", "email", "token"],
+      "properties": {
+        "user": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true,
+          "format": "email"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "companySignup": {
+      "type": "object",
+      "required": ["name", "email", "password", "address", "state", "city"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true,
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 6,
+          "format": "password"
+        },
+        "address": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        }
+      }
+    },
+    "companyLogin": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "uniqueItems": true,
+          "format": "email"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 6,
+          "format": "password"
+        }
+      }
+    },
+    "createCompanySurvey": {
+      "type": "object",
+      "required": ["title"],
+      "properties": {
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "responseToCompanySurvey": {
+      "type": "array",
+      "required": ["email", "password"],
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "answer": {
+          "type": "string"
+        }
+      }
+    },
+    "createQuestions": {
+      "type": "object",
+      "required": ["question", "survey"],
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "survey": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "host": "localhost:8000",
+  "basePath": "/api/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"]
 }

@@ -4,7 +4,7 @@ const authController = require("../controllers/auth");
 
 const authRouter = Router();
 
-authRouter.post("/verification-code", authController.verificationCode);
+authRouter.post("/verification", authController.verificationCode);
 
 authRouter.post("/signup", companyMiddleware.signupValidation, authController.signUp);
 
