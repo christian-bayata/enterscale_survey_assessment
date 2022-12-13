@@ -8,6 +8,7 @@
     "test": "export NODE_ENV=test && export PORT=5001 && jest --runInBand --coverage --verbose --forceExit"
   },
   "dependencies": {
+    "amqplib": "^0.10.3",
     "app-root-path": "^3.1.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
