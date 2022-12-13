@@ -2,6 +2,7 @@ require("express-async-errors");
 const Response = require("../../../utils/response");
 const status = require("../../../status-codes");
 const questionRepository = require("../../../repositories/question");
+const rabbitMqService = require("../../../services/rabbitmq/service");
 
 const createSurveyQuestion = async (req, res) => {
   const { company, data } = res;
@@ -14,6 +15,9 @@ const createSurveyQuestion = async (req, res) => {
     } else {
       return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Error! Could not create question" });
     }
+
+    /************** Send question to rabbitMQ queue ******************/
+    await rabbitMqService.publishToQueue("QUESTION", { newQuestion });
 
     return Response.sendSuccess({ res, statusCode: status.OK, message: "Successfully created question for survey", body: newQuestion });
   } catch (error) {

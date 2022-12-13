@@ -2,6 +2,7 @@ require("express-async-errors");
 const Response = require("../../../utils/response");
 const status = require("../../../status-codes");
 const surveyRepository = require("../../../repositories/survey");
+const rabbitMqService = require("../../../services/rabbitmq/service");
 
 const createCompanySurvey = async (req, res) => {
   const { company } = res;
@@ -13,6 +14,9 @@ const createCompanySurvey = async (req, res) => {
   try {
     const companySurvey = await surveyRepository.createSurvey({ title, company: company.id });
     const surveyUrl = `http://localhost:8000/api/v1/get-survey/${companySurvey.slug}`;
+
+    /************** Send question to rabbitMQ queue ******************/
+    await rabbitMqService.publishToQueue("QUESTION", { companySurvey });
 
     return Response.sendSuccess({ res, statusCode: status.OK, message: "Survey url successfully created", body: surveyUrl });
   } catch (error) {
