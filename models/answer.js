@@ -10,7 +10,6 @@ const AnswerSchema = new Schema(
     },
     answer: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

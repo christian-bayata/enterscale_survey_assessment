@@ -1,5 +1,5 @@
 require("express-async-errors");
-const userRepository = require("../../../repositories/user");
+const companyRespository = require("../../../repositories/company");
 const tokenRepository = require("../../../repositories/token");
 const Response = require("../../../utils/response");
 const crypto = require("crypto");
@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 const helper = require("../../../utils/helper");
 
 /**
- * @Title Company verification code
+ * @Responsibility: Company verification code
  * @Param req
  * @Param res
  * @Returns Returns the verification code of the company
@@ -23,7 +23,7 @@ const verificationCode = async (req, res) => {
 
   try {
     /* Check if user with this email already exists */
-    const confirmEmail = await userRepository.findUser(email);
+    const confirmEmail = await companyRespository.findCompany({ email });
     if (confirmEmail) return Response.sendError({ res, statusCode: status.BAD_REQUEST, error: "You already have an account with us" });
 
     /* Create verification code for user */
@@ -43,7 +43,6 @@ const verificationCode = async (req, res) => {
 
 /**
  * @Responsibility:  Company signs up
- *
  * @param req
  * @param res
  * @returns {Promise<*>}
@@ -58,7 +57,7 @@ const signUp = async (req, res) => {
 
   try {
     /* Check if user already exists */
-    const userExists = await userRepository.findUser(data.email);
+    const userExists = await companyRespository.findCompany({ email: data.email });
     if (userExists) return Response.sendError({ res, statusCode: status.CONFLICT, message: "User already exists" });
 
     const confirmUserVerCode = await tokenRepository.confirmVerToken({ email: data.email, token: data.verCode });
@@ -73,7 +72,7 @@ const signUp = async (req, res) => {
     }
 
     const companyData = { name: data.name, email: data.email, address: data.address, state: data.state, password: data.password, city: data.city };
-    const createCompany = await userRepository.createUser(companyData, { session });
+    const createCompany = await companyRespository.createCompany(companyData, { session });
     const theCompany = _.pick(createCompany, ["_id", "name", "address", "email", "state", "city"]);
     await tokenRepository.deleteVerToken({ email: data.email, token: data.verCode }, { session });
     /* Commit the changes made */
@@ -91,16 +90,16 @@ const signUp = async (req, res) => {
 
 /**
  * @Responsibility:  Logs in an already signed up company
- *
  * @param req
  * @param res
  * @returns {Promise<*>}
  */
+
 const login = async (req, res) => {
   const { data } = res;
 
   try {
-    const userExists = await userRepository.findUser(data.email);
+    const userExists = await companyRespository.findCompany({ email: data.email });
     if (!userExists) return Response.sendError({ res, statusCode: status.NOT_FOUND, message: "Sorry you do not have an account with us. Please sign up" });
 
     /* validate user password with bcrypt */

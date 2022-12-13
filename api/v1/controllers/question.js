@@ -4,6 +4,14 @@ const status = require("../../../status-codes");
 const questionRepository = require("../../../repositories/question");
 const rabbitMqService = require("../../../services/rabbitmq/service");
 
+/**
+ * @Responsibility: Creates company survey question(s)
+ * @Param req
+ * @Param res
+ * @Returns Returns the new question
+ *
+ */
+
 const createSurveyQuestion = async (req, res) => {
   const { company, data } = res;
   if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "Uauthenticated user. Please login" });

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const Response = require("../utils/response");
-const userRepository = require("../repositories/user");
+const companyRespository = require("../repositories/company");
 const status = require("../status-codes");
 const jwt = require("jsonwebtoken");
 
