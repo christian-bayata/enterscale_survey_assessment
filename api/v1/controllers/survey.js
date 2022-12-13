@@ -6,6 +6,8 @@ const surveyRepository = require("../../../repositories/survey");
 const createCompanySurvey = async (req, res) => {
   const { company } = res;
   const { title } = req.body;
+
+  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "Uauthenticated user. Please login" });
   if (!title) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Please provide the title of the survey" });
 
   try {

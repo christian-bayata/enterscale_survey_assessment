@@ -1,4 +1,3 @@
-require("express-async-errors");
 const Joi = require("joi");
 const Response = require("../utils/response");
 const userRepository = require("../repositories/user");
