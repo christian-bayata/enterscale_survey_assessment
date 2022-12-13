@@ -14,7 +14,7 @@ const rabbitMqService = require("../../../services/rabbitmq/service");
 
 const createSurveyQuestion = async (req, res) => {
   const { company, data } = res;
-  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "Uauthenticated user. Please login" });
+  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "You are not authenticated, please login." });
 
   try {
     const newQuestion = await questionRepository.createQuestion({ question: data.question, survey: data.survey });

@@ -19,7 +19,7 @@ const createCompanySurvey = async (req, res) => {
   const { company } = res;
   const { title } = req.body;
 
-  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "Uauthenticated user. Please login" });
+  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "You are not authenticated, please login." });
   if (!title) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Please provide the title of the survey" });
 
   try {
@@ -106,7 +106,7 @@ const respondToCompanySurvey = async (req, res) => {
 
 const getSurveyResponses = async (req, res) => {
   const { company } = res;
-  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "Uauthenticated user. Please login" });
+  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "You are not authenticated, please login." });
 
   try {
     const getCompany = await companyRespository.findCompany({ _id: company._id });
@@ -126,7 +126,7 @@ const getSurveyResponses = async (req, res) => {
 
     return Response.sendSuccess({ res, statusCode: status.OK, message: "Survey responses successfully retrieved", body: overallSurveyWithResponses });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return Response.sendFatalError({ res });
   }
 };

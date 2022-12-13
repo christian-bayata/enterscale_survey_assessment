@@ -99,7 +99,7 @@ const authenticateCompany = async (req, res, next) => {
 
   /* if token is invalid or has expired */
   if (!authorization || !decode || !decode._id) {
-    return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "Unauthenticated! Please login" });
+    return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "You are unauthnticated! Please login" });
   }
 
   try {
