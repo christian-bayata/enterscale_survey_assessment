@@ -24,7 +24,7 @@ const verificationCode = async (req, res) => {
   try {
     /* Check if user with this email already exists */
     const confirmEmail = await companyRespository.findCompany({ email });
-    if (confirmEmail) return Response.sendError({ res, statusCode: status.BAD_REQUEST, error: "You already have an account with us" });
+    if (confirmEmail) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "You already have an account with us" });
 
     /* Create verification code for user */
     const verToken = { email, token: crypto.randomBytes(3).toString("hex").toUpperCase() };
@@ -34,7 +34,7 @@ const verificationCode = async (req, res) => {
     const message = `Hello, your verification token is ${userToken.token}.\n\n Thanks and regards`;
     await sendEmail({ email, subject: "Verification Code", message });
 
-    return Response.sendSuccess({ res, statusCode: status.OK, message: "Code successfully sent", body: userToken });
+    return Response.sendSuccess({ res, statusCode: status.OK, message: "Token successfully sent", body: userToken });
   } catch (error) {
     // console.log("********************: ", error);
     return Response.sendFatalError({ res });
@@ -61,14 +61,14 @@ const signUp = async (req, res) => {
     if (userExists) return Response.sendError({ res, statusCode: status.CONFLICT, message: "User already exists" });
 
     const confirmUserVerCode = await tokenRepository.confirmVerToken({ email: data.email, token: data.verCode });
-    if (!confirmUserVerCode) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Invalid verification code, please try again." });
+    if (!confirmUserVerCode) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Invalid verification token, please try again." });
 
     /* Delete token if the received time is past 30 minutes */
     const timeDiff = +(Date.now() - confirmUserVerCode.createdAt.getTime());
     const timeDiffInMins = +(timeDiff / (1000 * 60));
     if (timeDiffInMins > 30) {
       await tokenRepository.deleteVerToken({ email: data.email, token: data.verCode });
-      return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "The verification code has expired, kindly request another." });
+      return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "The verification token has expired, kindly request another." });
     }
 
     const companyData = { name: data.name, email: data.email, address: data.address, state: data.state, password: data.password, city: data.city };
