@@ -119,7 +119,7 @@ module.exports = { findCompany, createCompany };
 
 ### Create a Controller
 
-Controllers in the codebase have a naming convention: `modelname.js` (except for **search** which outsources from elastic-search service, and **auth** which shares the same model with **company**).
+Controllers in the codebase have a naming convention: `modelname.js` (except for **auth** which shares the same model with **company**).
 To use a model function inside the controller, require the repository in the controller and use it. The controller should not have direct access to the model except through the repository
 
 Example Controller for all **CRUD** operations (taking the auth controller as an example):
