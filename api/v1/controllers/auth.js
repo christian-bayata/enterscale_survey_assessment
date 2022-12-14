@@ -155,7 +155,7 @@ const forgotPassword = async (req, res) => {
 };
 
 /**
- * @Responsibility: Enables user reset password with reset token
+ * @Responsibility: Enables company to reset password with reset token
  *
  * @param req
  * @param res
