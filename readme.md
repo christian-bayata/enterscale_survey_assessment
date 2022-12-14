@@ -19,11 +19,10 @@
 - :cop: Authentication via [JWT](https://jwt.io/)
 - Routes mapping via [express-router](https://expressjs.com/en/guide/routing.html)
 - Documented using [Swagger](https://swagger.io). Find link to docs [here](http://206.189.227.235/api-docs)
-- Background operations are run on [fund-me-background-service](https://github.com/christian-bayata/fundMe.git). Btw it is a public repo and is easily accessible.
-- Uses [MongoDB](https://www.mongodb.com) as database.
+- Background operations are run on [enterscale-survey-background-service](https://github.com/christian-bayata/fundMe.git). This is a public repo and is easily accessible.
+- Uses [MongoDB](https://www.mongodb.com) as database. The reason for this is: speed and non-complex setup for unit, integrated and end-to-end testing
 - [Mongoose](https://mongoosejs.com) as object document model
 - Environments for `development`, `test`, and `production`
 - Unit and Integration tests running with [Jest](https://github.com/facebook/jest)
 - Built with [yarn scripts](#npm-scripts)
-- Uses [Elastic Search](https://www.elastic.co/products/elasticsearch) for search operations
-- example for User model and User controller, with jwt authentication, simply type `yarn start`
+- example for Company model and Company controller, with jwt authentication, simply type `yarn start`
