@@ -68,7 +68,7 @@ const signUp = async (req, res) => {
     if (!confirmUserVerToken) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Invalid verification token, please try again." });
 
     /* Delete token if the received time is past 30 minutes */
-    const timeDiff = +(Date.now() - confirmUserVerCode.createdAt.getTime());
+    const timeDiff = +(Date.now() - confirmUserVerToken.createdAt.getTime());
     const timeDiffInMins = +(timeDiff / (1000 * 60));
     if (timeDiffInMins > 30) {
       await tokenRepository.deleteVerToken({ email: data.email, token: data.verCode });
@@ -84,7 +84,7 @@ const signUp = async (req, res) => {
 
     return Response.sendSuccess({ res, statusCode: status.CREATED, message: "Company successfully signed up", body: theCompany });
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return Response.sendFatalError({ res });
   } finally {
     /* Ending the session */
