@@ -23,7 +23,7 @@ const createCompanySurvey = async (req, res) => {
 
   try {
     const companySurvey = await surveyRepository.createSurvey({ title, company: company._id });
-    const surveyUrl = `http://localhost:8000/api/v1/get-survey/${companySurvey.slug}`;
+    const surveyUrl = `http://localhost:8000/api/get-survey/${companySurvey.slug}`;
 
     /************** Send question to rabbitMQ queue ******************/
     // await rabbitMqService.publishToQueue("QUESTION", { companySurvey });
