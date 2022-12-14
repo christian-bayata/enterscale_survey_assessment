@@ -22,7 +22,7 @@ const createSurveyQuestion = async (req, res) => {
     }
 
     /************** Send question to rabbitMQ queue ******************/
-    await rabbitMqService.publishToQueue("QUESTION", { newQuestion });
+    // await rabbitMqService.publishToQueue("QUESTION", { newQuestion });
 
     return Response.sendSuccess({ res, statusCode: status.OK, message: "Successfully created question for survey", body: newQuestion });
   } catch (error) {

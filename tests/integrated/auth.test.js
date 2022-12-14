@@ -56,6 +56,20 @@ describe("Auth Controller", () => {
       expect(response.body.message).toMatch(/have an account/i);
     });
 
+    it("should fail if the token already exists", async () => {
+      await Token.create({
+        email: "some_email@gmail.com",
+      });
+
+      const payload = {
+        email: "some_email@gmail.com",
+      };
+
+      const response = await request(server).post(`${baseURL}/verification`).send(payload);
+      expect(response.status).toBe(400);
+      expect(response.body.message).toMatch(/token already exists/i);
+    });
+
     it("should create verfication code if all requirements are met", async () => {
       const payload = { email: "some_email@gmail.com" };
 

@@ -22,9 +22,13 @@ const verificationCode = async (req, res) => {
   if (!email) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Please provide an email" });
 
   try {
-    /* Check if user with this email already exists */
+    /* Check if company with this email already exists */
     const confirmEmail = await companyRespository.findCompany({ email });
     if (confirmEmail) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "You already have an account with us" });
+
+    /* Check if token already exists */
+    const confirmToken = await tokenRepository.confirmVerToken({ email });
+    if (confirmToken) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "token already exists" });
 
     /* Create verification code for user */
     const verToken = { email, token: crypto.randomBytes(3).toString("hex").toUpperCase() };
@@ -60,8 +64,8 @@ const signUp = async (req, res) => {
     const company = await companyRespository.findCompany({ email: data.email });
     if (company) return Response.sendError({ res, statusCode: status.CONFLICT, message: "Company already exists" });
 
-    const confirmUserVerCode = await tokenRepository.confirmVerToken({ email: data.email, token: data.verCode });
-    if (!confirmUserVerCode) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Invalid verification token, please try again." });
+    const confirmUserVerToken = await tokenRepository.confirmVerToken({ email: data.email, token: data.verCode });
+    if (!confirmUserVerToken) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Invalid verification token, please try again." });
 
     /* Delete token if the received time is past 30 minutes */
     const timeDiff = +(Date.now() - confirmUserVerCode.createdAt.getTime());
