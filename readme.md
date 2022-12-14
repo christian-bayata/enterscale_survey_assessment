@@ -1189,3 +1189,58 @@ describe("Auth Controller", () => {
 ### Models
 
 Models are usually automatically tested in the integration tests as the Controller uses the Models, but you can test them seperately.
+
+## yarn scripts
+
+There are no automation tools or task runner like [grunt](https://gruntjs.com/) or [gulp](http://gulpjs.com/) used for this project. This project only uses yarn scripts for automation.
+
+### yarn start
+
+This is the entry for a developer. This command:
+
+- runs **nodemon watch task** for the all files connected to the codebase
+- sets the **environment variable** `NODE_ENV` to `development`
+- opens the db connection for `development`
+- starts the server on `localhost`
+
+### yarn test
+
+This command:
+
+- sets the **environment variable** `NODE_ENV` to `test`
+- creates the `test database`
+- runs `jest --runInBand --coverage --verbose --forceExit` for testing with [Jest](https://github.com/facebook/jest) and the coverage
+- drops the `test database` after the test
+
+## yarn run production
+
+This command:
+
+- sets the **environment variable** to `production`
+- opens the db connection for `production`
+- starts the server on 127.0.0.1 or on 127.0.0.1:PORT_ENV
+
+Before running on any environment you have to set the **environment variables**:
+
+```dotenv
+NODE_ENV=
+DB_HOST=
+DB_PORT=
+DB_NAME=
+TEST_DB_NAME=
+JWT_SECRET_KEY=
+SMTP_USER=
+SMTP_PASSWORD=
+SMTP_FROM_NAME=
+SMTP_FROM_EMAIL=
+SMTP_HOST=
+SMTP_PORT=
+RABBITMQ_USERNAME=
+RABBITMQ_PASSWORD=
+RABBITMQ_PORT=
+RABBITMQ_HOST=
+```
+
+## LICENSE
+
+MIT © Enterscale Survey Assessment
