@@ -1,6 +1,5 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const slug = require("mongoose-slug-generator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -34,11 +33,11 @@ const CompanySchema = new Schema(
       required: true,
       minlength: 6,
     },
-    slug: { type: String, slug: "name" },
+    resetPasswordToken: String,
+    resetPasswordDate: Date,
   },
   { timestamps: true }
 );
-mongoose.plugin(slug);
 
 /* Generate JSON web token for company */
 CompanySchema.methods.generateJsonWebToken = function () {

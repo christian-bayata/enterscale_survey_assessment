@@ -10,4 +10,8 @@ authRouter.post("/signup", companyMiddleware.signupValidation, authController.si
 
 authRouter.post("/login", companyMiddleware.loginValidation, authController.login);
 
+authRouter.post("/forgot-password", authController.forgotPassword);
+
+authRouter.patch("/reset-password/:token", authController.resetPassword);
+
 module.exports = authRouter;

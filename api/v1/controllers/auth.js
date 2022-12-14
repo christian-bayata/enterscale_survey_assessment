@@ -32,7 +32,7 @@ const verificationCode = async (req, res) => {
 
     /* Send verification code to company's email address */
     const message = `Hello, your verification token is ${userToken.token}.\n\n Thanks and regards`;
-    await sendEmail({ email, subject: "Verification Code", message });
+    await sendEmail({ email, subject: "Verification token", message });
 
     return Response.sendSuccess({ res, statusCode: status.OK, message: "Token successfully sent", body: userToken });
   } catch (error) {
@@ -57,8 +57,8 @@ const signUp = async (req, res) => {
 
   try {
     /* Check if user already exists */
-    const userExists = await companyRespository.findCompany({ email: data.email });
-    if (userExists) return Response.sendError({ res, statusCode: status.CONFLICT, message: "User already exists" });
+    const company = await companyRespository.findCompany({ email: data.email });
+    if (company) return Response.sendError({ res, statusCode: status.CONFLICT, message: "Company already exists" });
 
     const confirmUserVerCode = await tokenRepository.confirmVerToken({ email: data.email, token: data.verCode });
     if (!confirmUserVerCode) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Invalid verification token, please try again." });
@@ -99,18 +99,18 @@ const login = async (req, res) => {
   const { data } = res;
 
   try {
-    const userExists = await companyRespository.findCompany({ email: data.email });
-    if (!userExists) return Response.sendError({ res, statusCode: status.NOT_FOUND, message: "Sorry you do not have an account with us. Please sign up" });
+    const company = await companyRespository.findCompany({ email: data.email });
+    if (!company) return Response.sendError({ res, statusCode: status.NOT_FOUND, message: "Sorry you do not have an account with us. Please sign up" });
 
     /* validate user password with bcrypt */
-    const validPassword = await userExists.comparePassword(data.password);
+    const validPassword = await company.comparePassword(data.password);
     if (!validPassword) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Incorrect Password! Unauthorized" });
 
     /* Generate JWT token for user */
-    const token = userExists.generateJsonWebToken();
+    const token = company.generateJsonWebToken();
 
     /* Format and hash user data for security */
-    const protectedData = helper.formatUserData(data);
+    const protectedData = helper.formatCompanyData(data);
 
     return Response.sendSuccess({ res, statusCode: status.OK, message: "User successfully logged in", body: { token, userData: protectedData } });
   } catch (error) {
@@ -119,4 +119,90 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { verificationCode, signUp, login };
+/**
+ * @Responsibility: Provide company with password reset token
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Please provide a valid email" });
+
+  try {
+    const company = await companyRespository.findCompany({ email });
+    if (!company) return Response.sendError({ res, statusCode: status.NOT_FOUND, message: "Sorry you do not have an account with us. Please sign up" });
+
+    //Create reset password token and save
+    const getResetToken = await helper.resetToken(company);
+
+    const resetUrl = `${req.protocol}://${req.get("host")}/api/auth/reset-password/${getResetToken}`;
+
+    //Set the password reset email message for company
+    const message = `This is your password reset token: \n\n${resetUrl}\n\nIf you have not requested this email, then ignore it`;
+
+    //The reset token email
+    await sendEmail({ email: company.email, subject: "Password Recovery", message });
+
+    return Response.sendSuccess({ res, statusCode: status.OK, message: "Password reset token successfully sent" });
+  } catch (error) {
+    console.log(error);
+    return Response.sendFatalError({ res });
+  }
+};
+
+/**
+ * @Responsibility: Enables user reset password with reset token
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+
+const resetPassword = async (req, res) => {
+  const { password, confirmPassword } = req.body;
+  const { token } = req.params;
+
+  try {
+    const company = await companyRespository.findCompany({ resetPasswordToken: token });
+    if (!company) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Password reset token is invalid" });
+
+    // Check to see if the token is still valid
+    const timeDiff = +(Date.now() - company.resetPasswordDate.getTime());
+    const timeDiffInMins = +(timeDiff / (1000 * 60));
+
+    if (timeDiffInMins > 30) {
+      company.resetPasswordToken = undefined;
+      company.resetPasswordDate = undefined;
+      await company.save();
+
+      return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Password reset token has expired" });
+    }
+
+    // Confirm if the password matches
+    if (password !== confirmPassword) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Password does not match" });
+
+    // If password matches
+    company.password = password;
+
+    company.resetPasswordToken = undefined;
+    company.resetPasswordDate = undefined;
+    await company.save();
+
+    // Generate another Auth token for company
+    const authToken = company.generateJsonWebToken();
+
+    /* Format and hash company data for security */
+    const protectedData = helper.formatCompanyData(company);
+
+    return Response.sendSuccess({ res, statusCode: status.OK, message: "Password reset is successful", body: { token: authToken, companyData: protectedData } });
+  } catch (error) {
+    console.log(error);
+    return Response.sendFatalError({ res });
+  }
+};
+
+module.exports = { verificationCode, signUp, login, forgotPassword, resetPassword };

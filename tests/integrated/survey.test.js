@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 let server;
 let baseURL = "/api/survey";
 
-describe("Auth Controller", () => {
+describe("Survey Controller", () => {
   beforeAll(() => {
     server = require("../../server");
   });
