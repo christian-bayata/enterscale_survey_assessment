@@ -55,7 +55,7 @@ Start by cloning this repository
 
 ```sh
 # HTTPS
-$ git clone https://github.com/christian-bayata/enterscale_suvery_assessment
+$ git clone https://github.com/christian-bayata/enterscale_survey_assessment
 ```
 
 then
