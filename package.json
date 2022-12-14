@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "export NODE_ENV=test && export PORT=8001 && jest --runInBand  --coverage --verbose --forceExit"
+    "test": "export NODE_ENV=test && export PORT=8001 && jest --runInBand  --coverage --verbose --forceExit",
+    "prod": "export NODE_ENV=production && node app.js"
   },
   "repository": {
     "type": "git",
