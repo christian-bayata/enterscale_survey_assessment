@@ -1,6 +1,6 @@
 # enterscale_survey_assessment
 
-> A company requires you to build a secured survey server that allows an admin to roll out surveys. The API was built with Node JS, MongoDB, mongoose ORM
+> A secured survey server that allows a company admin to roll out surveys. The API was built with Node JS, MongoDB, mongoose ODM
 
 | PROJECT FEATURE                                             |       STATUS       |
 | :---------------------------------------------------------- | :----------------: |
