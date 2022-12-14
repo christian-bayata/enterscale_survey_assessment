@@ -19,7 +19,6 @@ const createCompanySurvey = async (req, res) => {
   const { company } = res;
   const { title } = req.body;
 
-  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "You are not authenticated, please login." });
   if (!title) return Response.sendError({ res, statusCode: status.BAD_REQUEST, message: "Please provide the title of the survey" });
 
   try {
@@ -27,7 +26,7 @@ const createCompanySurvey = async (req, res) => {
     const surveyUrl = `http://localhost:8000/api/v1/get-survey/${companySurvey.slug}`;
 
     /************** Send question to rabbitMQ queue ******************/
-    await rabbitMqService.publishToQueue("QUESTION", { companySurvey });
+    // await rabbitMqService.publishToQueue("QUESTION", { companySurvey });
 
     return Response.sendSuccess({ res, statusCode: status.OK, message: "Survey url successfully created", body: surveyUrl });
   } catch (error) {
@@ -46,7 +45,6 @@ const createCompanySurvey = async (req, res) => {
 
 const getCompanySurvey = async (req, res) => {
   const { slug } = req.params;
-  if (!slug) return Response.sendError({ res, statusCode: status.NOT_FOUND, message: "Slug not found" });
 
   try {
     const theSurvey = await surveyRepository.retrieveSurvey({ slug });
@@ -106,13 +104,13 @@ const respondToCompanySurvey = async (req, res) => {
 
 const getSurveyResponses = async (req, res) => {
   const { company } = res;
-  if (!company) return Response.sendError({ res, statusCode: status.UNAUTHENTICATED, message: "You are not authenticated, please login." });
 
   try {
     const getCompany = await companyRespository.findCompany({ _id: company._id });
     if (!getCompany) return Response.sendError({ res, statusCode: status.NOT_FOUND, message: "Company could not be found" });
 
     const theSurvey = await surveyRepository.retrieveSurvey({ company: company._id });
+    if (!theSurvey) return Response.sendError({ res, statusCode: status.NOT_FOUND, message: "Survey could not be found" });
     const surveyQuestions = theSurvey.questions;
 
     const theQuestionsAndResponses = [];
