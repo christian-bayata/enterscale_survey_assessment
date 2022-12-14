@@ -26,7 +26,7 @@ const createCompanySurvey = async (req, res) => {
     const surveyUrl = `http://localhost:8000/api/v1/get-survey/${companySurvey.slug}`;
 
     /************** Send question to rabbitMQ queue ******************/
-    // await rabbitMqService.publishToQueue("QUESTION", { companySurvey });
+    await rabbitMqService.publishToQueue("QUESTION", { companySurvey });
 
     return Response.sendSuccess({ res, statusCode: status.OK, message: "Survey url successfully created", body: surveyUrl });
   } catch (error) {

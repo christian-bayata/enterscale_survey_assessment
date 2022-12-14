@@ -1,12 +1,24 @@
 {
-  "name": "enterscale_survey",
+  "name": "enterscale_survey_assessment",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "license": "MIT",
   "scripts": {
     "start": "nodemon server.js",
     "test": "export NODE_ENV=test && export PORT=8001 && jest --runInBand  --coverage --verbose --forceExit"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/christian-bayata/enterscale_suvery_assessment"
+  },
+  "keywords": [
+    "enterscale",
+    "survey",
+    "questions",
+    "answers",
+    "company"
+  ],
+  "homepage": "https://github.com/christian-bayata/enterscale_suvery_assessment#readme",
   "dependencies": {
     "amqplib": "^0.10.3",
     "app-root-path": "^3.1.0",
