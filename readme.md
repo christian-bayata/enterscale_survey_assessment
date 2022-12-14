@@ -1189,3 +1189,7 @@ describe("Auth Controller", () => {
 ### Models
 
 Models are usually automatically tested in the integration tests as the Controller uses the Models, but you can test them seperately.
+
+<img width="1679" alt="Screenshot 2022-12-14 at 05 03 53" src="https://user-images.githubusercontent.com/80787295/207563968-da8b76e5-b9e6-4d79-ae99-b827e8e3e169.png">
+
+
