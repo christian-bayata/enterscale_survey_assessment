@@ -38,10 +38,6 @@
 - [Models](#models)
   - [Create a Model](#create-a-model)
 - [Middlewares](#middlewares)
-  - [company.middleware](#companymiddleware)
-  - [question.middleware](#questionmiddleware)
-  - [survey.middleware](#surveymiddleware)
-  - [error.middleware](#errormiddleware)
 - [Services](#services)
 - [Config](#config)
   - [Connection and Database](#connection-and-database)
@@ -585,7 +581,7 @@ To start the DB, add the credentials for production. add `environment variables`
 
 Here you define all your routes for your api.
 
-## Create Routes
+### Create Routes
 
 For further information read the [guide](https://expressjs.com/en/guide/routing.html) of express router.
 
