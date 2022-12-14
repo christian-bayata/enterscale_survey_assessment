@@ -19,7 +19,7 @@
 - :cop: Authentication via [JWT](https://jwt.io/)
 - Routes mapping via [express-router](https://expressjs.com/en/guide/routing.html)
 - Documented using [Swagger](https://swagger.io). Find link to docs [here](http://206.189.227.235/api-docs)
-- Background operations are run on [enterscale-survey-background-service](https://github.com/christian-bayata/enterscale_suvery_assessment). This is a public repo and is easily accessible.
+- Background operations are run on [enterscale-survey-background-service](https://github.com/christian-bayata/enterscale_survey_assessment). This is a public repo and is easily accessible.
 - Uses [MongoDB](https://www.mongodb.com) as database. The reason for this is: speed and non-complex setup for unit, integrated and end-to-end testing
 - [Mongoose](https://mongoosejs.com) as object document model
 - Environments for `development`, `test`, and `production`
