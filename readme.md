@@ -1190,6 +1190,10 @@ describe("Auth Controller", () => {
 
 Models are usually automatically tested in the integration tests as the Controller uses the Models, but you can test them seperately.
 
+- Pictorial view of the test coverage of the project
+
+<img width="1679" alt="Screenshot 2022-12-14 at 05 03 53" src="https://user-images.githubusercontent.com/80787295/207563968-da8b76e5-b9e6-4d79-ae99-b827e8e3e169.png">
+
 ## yarn scripts
 
 There are no automation tools or task runner like [grunt](https://gruntjs.com/) or [gulp](http://gulpjs.com/) used for this project. This project only uses yarn scripts for automation.
